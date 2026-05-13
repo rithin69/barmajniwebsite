@@ -19,7 +19,7 @@ export default function ScrambleText({
 }: Props) {
   const [output, setOutput] = useState('')
   const frameRef = useRef<number>(0)
-  const timerRef = useRef<ReturnType<typeof setTimeout>>()
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   useEffect(() => {
     if (!active) return
