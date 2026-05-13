@@ -20,7 +20,7 @@ export default function PhilosophySection() {
         >
           Innovation{' '}
           <em className="italic text-white/40">x</em>{' '}
-          Vision
+          Intelligence
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
@@ -50,18 +50,18 @@ export default function PhilosophySection() {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Choose your space</p>
+              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Build with precision</p>
               <p className="text-white/70 text-base md:text-lg leading-relaxed">
-                Every meaningful breakthrough begins at the intersection of disciplined strategy and remarkable creative vision. We operate at that crossroads, turning bold thinking into tangible outcomes that move people and reshape industries.
+                Every product we ship starts with a clear problem. We don't build AI for the sake of it — we engineer systems that eliminate bottlenecks, reduce overhead, and create measurable value for businesses that trust us with their growth.
               </p>
             </div>
 
             <div className="w-full h-px bg-white/10" />
 
             <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Shape the future</p>
+              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Scale with confidence</p>
               <p className="text-white/70 text-base md:text-lg leading-relaxed">
-                We believe that the best work emerges when curiosity meets conviction. Our process is designed to uncover hidden opportunities and translate them into experiences that resonate long after the first impression.
+                From early-stage SaaS to enterprise-grade platforms, our architecture is built to grow. We design for scale from day one — so our clients never have to choose between moving fast and building it right.
               </p>
             </div>
           </motion.div>

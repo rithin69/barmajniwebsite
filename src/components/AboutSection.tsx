@@ -1,42 +1,124 @@
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+
+const ABOUT_VIDEO = '/typing.mp4'
 
 export default function AboutSection() {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-100px' })
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end end'],
+  })
+
+  // Left panel fades out early
+  const textOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0])
+  const textY      = useTransform(scrollYProgress, [0, 0.25], [0, -40])
+
+  // Video expands to fullscreen
+  const videoLeft          = useTransform(scrollYProgress, [0.1, 0.68], ['37vw', '0vw'])
+  const videoTop           = useTransform(scrollYProgress, [0.1, 0.68], ['12.5vh', '0vh'])
+  const videoWidth         = useTransform(scrollYProgress, [0.1, 0.68], ['61vw', '100vw'])
+  const videoHeight        = useTransform(scrollYProgress, [0.1, 0.68], ['75vh', '100vh'])
+  const videoBorderRadius  = useTransform(scrollYProgress, [0.1, 0.68], [20, 0])
+
+  // Overlay text — fades in RIGHT as video hits fullscreen
+  const overlayOpacity = useTransform(scrollYProgress, [0.68, 0.80], [0, 1])
+  const overlayY       = useTransform(scrollYProgress, [0.68, 0.80], [30, 0])
 
   return (
-    <section
-      ref={ref}
-      className="bg-black pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden"
-    >
-      <div className="bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.03)_0%,_transparent_70%)]">
-        <div className="max-w-6xl mx-auto">
-          <motion.p
-            className="text-white/40 text-sm tracking-widest uppercase mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-          >
-            About Us
-          </motion.p>
+    <div ref={containerRef} className="relative bg-black" style={{ height: '260vh' }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
 
-          <motion.h2
-            className="text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight"
-            initial={{ opacity: 0, y: 40 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            style={{ fontFamily: "'Instrument Serif', serif" }}
-          >
-            Pioneering{' '}
-            <em className="italic text-white/60">ideas</em>{' '}
-            for
-            <br className="hidden md:block" />
-            {' '}minds that{' '}
-            <em className="italic text-white/60">create, build, and inspire.</em>
-          </motion.h2>
-        </div>
+        {/* Left panel text — white, on dark bg */}
+        <motion.div style={{
+          position: 'absolute', left: 0, top: 0,
+          height: '100%', width: '36vw',
+          display: 'flex', alignItems: 'center',
+          padding: '0 4vw',
+          opacity: textOpacity, y: textY,
+          zIndex: 10,
+        }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 28 }}>
+              <span style={{ display: 'block', width: 28, height: 1, background: 'rgba(255,255,255,0.3)' }} />
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: 'Arial, Helvetica, sans-serif', fontWeight: 400, margin: 0 }}>
+                About Us
+              </p>
+            </div>
+            <h2 style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 'clamp(1.6rem, 3vw, 3.2rem)', color: '#fff', lineHeight: 1.2, fontWeight: 700, margin: '0 0 20px' }}>
+              Engineering intelligent software for businesses that automate, scale, and lead.
+            </h2>
+            <p style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: 14, color: 'rgba(255,255,255,0.45)', lineHeight: 1.8, maxWidth: 270, margin: 0 }}>
+              We build AI-powered software that transforms how businesses operate, compete, and grow.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Expanding video */}
+        <motion.div style={{
+          position: 'absolute',
+          left: videoLeft, top: videoTop,
+          width: videoWidth, height: videoHeight,
+          borderRadius: videoBorderRadius,
+          overflow: 'hidden',
+          zIndex: 20,
+        }}>
+          <video
+            src={ABOUT_VIDEO}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            muted autoPlay loop playsInline preload="auto"
+          />
+        </motion.div>
+
+        {/* Overlay text — sits ABOVE video, black text for white video */}
+        <motion.div style={{
+          position: 'absolute',
+          bottom: '10%',
+          left: '6vw',
+          right: '6vw',
+          zIndex: 30,
+          opacity: overlayOpacity,
+          y: overlayY,
+          pointerEvents: 'none',
+        }}>
+          <p style={{
+            fontFamily: 'Arial, Helvetica, sans-serif',
+            fontSize: 11,
+            letterSpacing: '0.16em',
+            textTransform: 'uppercase',
+            color: '#000000',
+            fontWeight: 500,
+            margin: '0 0 14px',
+          }}>
+            About Us
+          </p>
+          <h2 style={{
+            fontFamily: 'Arial, Helvetica, sans-serif',
+            fontSize: 'clamp(2rem, 4vw, 4.5rem)',
+            color: '#000000',
+            lineHeight: 1.12,
+            letterSpacing: '-0.02em',
+            fontWeight: 700,
+            maxWidth: 750,
+            margin: '0 0 18px',
+          }}>
+            Engineering intelligent software for businesses that automate, scale, and lead.
+          </h2>
+          <p style={{
+            fontFamily: 'Arial, Helvetica, sans-serif',
+            fontSize: 15,
+            color: '#111111',
+            lineHeight: 1.75,
+            fontWeight: 400,
+            maxWidth: 460,
+            margin: 0,
+          }}>
+            We build AI-powered software that transforms how businesses operate, compete, and grow.
+          </p>
+        </motion.div>
+
       </div>
-    </section>
+    </div>
   )
 }
